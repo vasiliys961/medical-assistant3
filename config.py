@@ -3,18 +3,24 @@ import os
 import sys
 
 def load_secrets(config_path="secrets.toml"):
+    # Приоритет: сначала переменные окружения (для Railway/облака)
+    openrouter_key = os.getenv("OPENROUTER_API_KEY")
+    assemblyai_key = os.getenv("ASSEMBLYAI_API_KEY")
+    
+    # Если переменные окружения найдены — используем их
+    if openrouter_key and assemblyai_key:
+        return {
+            "OPENROUTER_API_KEY": openrouter_key,
+            "ASSEMBLYAI_API_KEY": assemblyai_key,
+            "model_preference": os.getenv("MODEL_PREFERENCE", "anthropic/claude-3-5-sonnet-20241022"),
+            "timeout": int(os.getenv("TIMEOUT", "180")),
+            "max_retries": int(os.getenv("MAX_RETRIES", "3"))
+        }
+    
+    # Иначе пробуем загрузить из secrets.toml (для локальной разработки)
     if not os.path.exists(config_path):
         print(f"❌ Файл {config_path} не найден!")
-        print("📝 Создайте файл secrets.toml с вашими API-ключами.")
-        print("Пример содержимого:")
-        print("""
-OPENROUTER_API_KEY = "ваш_ключ"
-ASSEMBLYAI_API_KEY = "ваш_ключ"
-
-[api_keys]
-OPENROUTER_API_KEY = "ваш_ключ"
-ASSEMBLYAI_API_KEY = "ваш_ключ"
-        """)
+        print("📝 Создайте файл secrets.toml с вашими API-ключами или установите переменные окружения.")
         sys.exit(1)
     
     try:
@@ -35,11 +41,3 @@ ASSEMBLYAI_API_KEY = "ваш_ключ"
 secrets = load_secrets()
 OPENROUTER_API_KEY = secrets["OPENROUTER_API_KEY"]
 ASSEMBLYAI_API_KEY = secrets["ASSEMBLYAI_API_KEY"]
-
-# В конце config.py
-if not OPENROUTER_API_KEY or OPENROUTER_API_KEY == "ваш_ключ":
-    print("⚠️ OPENROUTER_API_KEY не настроен!")
-    
-if not ASSEMBLYAI_API_KEY or ASSEMBLYAI_API_KEY == "ваш_ключ":
-    print("⚠️ ASSEMBLYAI_API_KEY не настроен!")
-
