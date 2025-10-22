@@ -72,12 +72,21 @@ venv\Scripts\activate     # для Windows
 pip install -r requirements.txt
 ```
 
-4. **Настройка API ключа**:
-   - Создайте файл `.env` в корневой папке проекта
-   - Добавьте ваш API ключ Anthropic:
-```env
-ANTHROPIC_API_KEY=your_api_key_here
-```
+4. ### 4. **Настройка secrets.toml**:
+   - Создайте файл `secrets.toml` в корневой папке проекта
+   - Добавьте ваши API ключи:
+OPENROUTER_API_KEY = "ваш_ключ_openrouter"
+ASSEMBLYAI_API_KEY = "ваш_ключ_assemblyai"
+
+[api_keys]
+OPENROUTER_API_KEY = "ваш_ключ_openrouter"
+ASSEMBLYAI_API_KEY = "ваш_ключ_assemblyai"
+
+[medical_analyzer]
+model_preference = "anthropic/claude-3-5-sonnet-20241022"
+timeout = 180
+max_retries = 3
+
 
 5. **Запуск приложения**:
 ```bash
