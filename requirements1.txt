@@ -1,9 +1,10 @@
 # Core
 streamlit==1.48.1
 requests==2.32.4
-numpy==1.24.3
+#numpy==1.24.3
 pandas==2.1.3
 toml==0.10.2
+numpy>=1.26.0,<2.0.0
 
 # Image & DICOM
 Pillow==10.1.0
